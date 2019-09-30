@@ -6,28 +6,34 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class User(AbstractUser, PolymorphicModel):
-    address = models.CharField('address', max_length=255, blank=True, null=True)
-    phone = models.CharField('phone number', max_length=255, blank=True, null=True)
-    date_updated = models.DateTimeField(null=False, auto_now=True)
-    date_created = models.DateTimeField(null=False, auto_now_add=True)
+class Usuario(AbstractUser, PolymorphicModel):
+    direccion = models.CharField( max_length=255, blank=True, null=True)
+    telefono = models.CharField( max_length=255, blank=True, null=True)
+    fecha_modificacion = models.DateTimeField(null=False, auto_now=True)
+    fecha_creacion = models.DateTimeField(null=False, auto_now_add=True)
 
     class Meta:
-        verbose_name = 'user'
-        verbose_name_plural = 'users'
+        verbose_name = 'usuario'
+        verbose_name_plural = 'usuarios'
 
 
-class Teacher(User):
-    Faculty = models.CharField('Faculty', max_length=255, blank=True, null=True)
-
-    class Meta:
-        verbose_name = 'teacher'
-        verbose_name_plural = 'teachers'
-
-
-class Student(User):
-    student_code = models.CharField('student code', max_length=255, blank=True, null=True)
+class Profesor(Usuario):
+    facultad = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'student'
-        verbose_name_plural = 'students'
+        verbose_name = 'profesor'
+        verbose_name_plural = 'profesores'
+
+    def __str__(self):
+        return self.first_name + '-' + self.email
+
+
+class Estudiante(Usuario):
+    codigo_de_estudiante = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'estudiante'
+        verbose_name_plural = 'estudiantes'
+
+    def __str__(self):
+        return self.first_name + '-' + self.codigo_de_estudiante

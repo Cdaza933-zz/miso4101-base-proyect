@@ -1,7 +1,17 @@
 from django.db import models
 
+from interactive_content.models import ContenidoInteractivo
+from users.models import Estudiante
 
 # Create your models here.
+
+
+class Marca(models.Model):
+    nombre = models.CharField(max_length=30)
+    punto = models.IntegerField(default=0)
+    contenido = models.ForeignKey(ContenidoInteractivo, on_delete=models.CASCADE, related_name='marcas')
+
+
 class Actividad(models.Model):
     nombre = models.CharField(max_length=30)
     numeroDeIntentos = models.IntegerField(default=0)
