@@ -26,26 +26,17 @@ class Pregunta(models.Model):
     Pregunta = models.CharField(max_length=200)
     actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.calificacion
-
 
 class Respuestmultiple(models.Model):
     respuesta = models.CharField(max_length=200)
     esCorrecta = models.BooleanField()
     preguntaSeleccionMultiple = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.calificacion
-
 
 class RespuestmultipleEstudiante(models.Model):
     seleccionada = models.BooleanField()
     estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
     preguntaSeleccionMultiple = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.calificacion
 
 
 class RespuestaAbiertaEstudiante(models.Model):
@@ -61,9 +52,6 @@ class RespuestaAbiertaEstudiante(models.Model):
 class RespuestaVoF(models.Model):
     esCorrecta = models.BooleanField()
     preguntaVoF = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.calificacion
 
 
 class RespuestaEstudianteVoF(models.Model):
