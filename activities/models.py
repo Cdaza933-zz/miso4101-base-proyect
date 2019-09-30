@@ -6,6 +6,7 @@ class Actividad(models.Model):
     nombre = models.CharField(max_length=30)
     numeroDeIntentos = models.IntegerField(default=0)
     tieneRetroalimentacion = models.BooleanField()
+    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre
