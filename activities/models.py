@@ -1,41 +1,64 @@
 from django.db import models
 
+
 # Create your models here.
-from polymorphic.models import PolymorphicModel
+class Actividad(models.Model):
+    nombre = models.CharField(max_length=30)
+    numeroDeIntentos = models.IntegerField(default=0)
+    tieneRetroalimentacion = models.BooleanField()
+    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nombre
 
 
-class Marker(models.Model):
-    marked_place = models.IntegerField(null=False, blank=False)
-    name = models.CharField(max_length=255, null=False, blank=False)
-    date_updated = models.DateTimeField(null=False, auto_now=True)
-    date_created = models.DateTimeField(null=False, auto_now_add=True)
+class Calificacion(models.Model):
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
+    calificacion = models.DecimalField(max_digits=10, decimal_places=2)
+    retroalimentacion = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.calificacion
 
 
-class ActivityType(PolymorphicModel):
-    name = models.CharField(max_length=255, null=False, blank=False)
-    date_updated = models.DateTimeField(null=False, auto_now=True)
-    date_created = models.DateTimeField(null=False, auto_now_add=True)
-    type_description = models.TextField(null=False, blank=False)
+class Pregunta(models.Model):
+    Pregunta = models.CharField(max_length=200)
+    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
 
 
-class FileQuestion(ActivityType):
-    file = models.FileField(null=True, blank=True)
+class Respuestmultiple(models.Model):
+    respuesta = models.CharField(max_length=200)
+    esCorrecta = models.BooleanField()
+    preguntaSeleccionMultiple = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
 
 
-class MultipleQuestion(ActivityType):
-    has_multiple_answers = models.BooleanField(default=True)
+class RespuestmultipleEstudiante(models.Model):
+    seleccionada = models.BooleanField()
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    preguntaSeleccionMultiple = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
 
 
-class ToggleQuestion(models.Model):
-    description = models.CharField(max_length=255, null=False, blank=False)
-    question_state = models.BooleanField(default=False)
-    related_question = models.ForeignKey(MultipleQuestion, null=False, blank=False, on_delete=models.CASCADE)
+class RespuestaAbiertaEstudiante(models.Model):
+    respuesta = models.CharField(max_length=200)
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    preguntaAbierta = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
+    nota = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.respuesta
 
 
-class Activity(models.Model):
-    name = models.CharField(max_length=255, null=False, blank=False)
-    date_updated = models.DateTimeField(null=False, auto_now=True)
-    date_created = models.DateTimeField(null=False, auto_now_add=True)
-    max_retry = models.IntegerField(default=1)
-    Activity_type = models.ForeignKey(ActivityType, null=False, blank=False, on_delete=models.CASCADE)
-    mark = models.ForeignKey(Marker, null=False, blank=False, on_delete=models.CASCADE)
+class RespuestaVoF(models.Model):
+    esCorrecta = models.BooleanField()
+    preguntaVoF = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
+
+
+class RespuestaEstudianteVoF(models.Model):
+    respuesta = models.BooleanField()
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    preguntaVoF = models.ForeignKey(RespuestaVoF, on_delete=models.CASCADE)
+    nota = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.respuesta
